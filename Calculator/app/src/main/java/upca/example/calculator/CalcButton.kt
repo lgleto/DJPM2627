@@ -51,6 +51,8 @@ fun CalcButton(
 @Composable
 fun CalcButtonPreview(){
     CalculatorTheme {
-        CalcButton(){}
+        CalcButton(
+            label = "2"
+        ){}
     }
 }

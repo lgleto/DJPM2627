@@ -28,6 +28,16 @@ fun CalculatorView(
 ){
 
     var displayText by remember { mutableStateOf("0") }
+
+    val onNumPressed : (String)->(Unit) = { num ->
+        if (displayText == "0") {
+            displayText = num
+        }else {
+            displayText += num
+        }
+    }
+
+
     Column(
         modifier = modifier.fillMaxSize()
     ) {
@@ -38,8 +48,14 @@ fun CalculatorView(
             fontSize = TextUnit( value = 58.0f, type = TextUnitType.Sp)
         )
         Row {
-            CalcButton(label = "9") { }
-            CalcButton(label = "8") { }
+            CalcButton(
+                label = "9",
+                onButtonPressed = onNumPressed
+            )
+            CalcButton(
+                label = "8",
+                onButtonPressed = onNumPressed
+            )
         }
     }
 
