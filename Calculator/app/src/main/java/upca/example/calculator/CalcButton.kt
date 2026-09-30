@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,6 +26,7 @@ import upca.example.calculator.ui.theme.CalculatorTheme
 fun CalcButton(
     modifier: Modifier = Modifier,
     label : String = "",
+    color : Color = MaterialTheme.colorScheme.secondary,
     onButtonPressed : (String) -> Unit
 ){
     Button(
@@ -33,7 +35,7 @@ fun CalcButton(
         },
         modifier = modifier,
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Red
+            containerColor = color
         )
     ) {
         Text(
