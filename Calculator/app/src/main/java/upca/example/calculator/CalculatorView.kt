@@ -33,8 +33,7 @@ fun CalculatorView(
 
     var displayText by remember { mutableStateOf("0") }
     var userIsInTheMiddleOfIntroduction by remember { mutableStateOf(false) }
-    var operation by remember { mutableStateOf<String?>(null) }
-    var operand  by remember { mutableStateOf(0.0) }
+    var calculatorBrain by remember { mutableStateOf(CalculatorBrain()) }
 
     val onNumPressed : (String)->(Unit) = { num ->
         if (userIsInTheMiddleOfIntroduction) {
@@ -58,21 +57,16 @@ fun CalculatorView(
 
     val onOperationPressed : (String)->(Unit) = { op ->
 
-        var result = displayText.toDouble()
-        when (operation) {
-            "+" -> result = displayText.toDouble() + operand
-            "-" -> result = displayText.toDouble() - operand
-            "×" -> result = displayText.toDouble() * operand
-            "÷" -> result = displayText.toDouble() / operand
-        }
+        val result = calculatorBrain
+            .doOperation(displayText.toDouble())
 
         if (result % 1.0 == 0.0 ){
             displayText = "${result.toInt()}"
         }else{
             displayText = "$result"
         }
-        operation = op
-        operand = displayText.toDouble()
+        calculatorBrain.operation = Operation.getOperation(op)
+
         userIsInTheMiddleOfIntroduction  = false
     }
 
@@ -101,7 +95,7 @@ fun CalculatorView(
                 modifier = Modifier
                     .padding(4.dp)
                     .weight(1f),
-                label = "E",
+                label = "±",
 
                 color = MaterialTheme.colorScheme.tertiary,
                 onButtonPressed = {}
