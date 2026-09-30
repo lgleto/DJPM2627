@@ -70,6 +70,22 @@ fun CalculatorView(
         userIsInTheMiddleOfIntroduction  = false
     }
 
+    val onUnaryOperation : (String)->(Unit) = { op ->
+
+        calculatorBrain.operation = Operation.getOperation(op)
+
+        val result = calculatorBrain
+            .doOperation(displayText.toDouble())
+
+        if (result % 1.0 == 0.0 ){
+            displayText = "${result.toInt()}"
+        }else{
+            displayText = "$result"
+        }
+
+        userIsInTheMiddleOfIntroduction  = false
+    }
+
 
     Column(
         modifier = modifier.fillMaxSize()
@@ -88,7 +104,9 @@ fun CalculatorView(
                 label = "C",
                 color = MaterialTheme.colorScheme.tertiary,
                 onButtonPressed = {
-
+                    calculatorBrain.operation = null
+                    calculatorBrain.accumulator = 0.0
+                    displayText = "0"
                 }
             )
             CalcButton(
@@ -98,7 +116,7 @@ fun CalculatorView(
                 label = "±",
 
                 color = MaterialTheme.colorScheme.tertiary,
-                onButtonPressed = {}
+                onButtonPressed = onUnaryOperation
             )
             CalcButton(
                 modifier = Modifier
@@ -106,7 +124,7 @@ fun CalculatorView(
                     .weight(1f),
                 label = "%",
                 color = MaterialTheme.colorScheme.tertiary,
-                onButtonPressed = onOperationPressed
+                onButtonPressed = onUnaryOperation
             )
             CalcButton(
                 modifier = Modifier
@@ -114,7 +132,7 @@ fun CalculatorView(
                     .weight(1f),
                 label = "√",
                 color = MaterialTheme.colorScheme.tertiary,
-                onButtonPressed = onOperationPressed
+                onButtonPressed = onUnaryOperation
             )
         }
         Row(modifier = Modifier.weight(1f))  {
