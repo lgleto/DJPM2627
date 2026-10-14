@@ -12,14 +12,22 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
 import java.io.IOException
-import java.util.Date
+
+data class ArticlesViewState (
+    val articles : ArrayList<Article> = arrayListOf(),
+    val error : String? = null,
+    var isLoading : Boolean = false,
+)
 
 class ArticlesViewModel : ViewModel() {
 
-    private val _articles = MutableStateFlow(arrayListOf<Article>())
-    val articles : StateFlow<List<Article>> = _articles.asStateFlow()
+    private val _uiState = MutableStateFlow(ArticlesViewState())
+    val uiState : StateFlow<ArticlesViewState> = _uiState.asStateFlow()
 
     fun fetchArticles(){
+        _uiState.value = _uiState.value.copy(
+            isLoading = true
+        )
         viewModelScope.launch(Dispatchers.IO) {
             val client = OkHttpClient()
 
@@ -27,39 +35,40 @@ class ArticlesViewModel : ViewModel() {
                 .url("https://newsapi.org/v2/top-headlines?country=us&apiKey=1765f87e4ebc40229e80fd0f75b6416c")
                 .build()
 
-            client.newCall(request).execute().use { response ->
-                if (!response.isSuccessful) throw IOException("Unexpected code $response")
-
-                for ((name, value) in response.headers) {
-                    println("$name: $value")
-                }
-
-                val result = response.body!!.string()
-                val jsonResult = JSONObject(result)
-                val status = jsonResult.getString("status")
-                if (status == "ok") {
-                    val articlesJson = jsonResult.getJSONArray("articles")
-                    val articlesResult = arrayListOf<Article>()
-                    for (index in  0..<articlesJson.length()){
-                        val articleJson = articlesJson.getJSONObject(index)
-                        val title = articleJson.getString("title")
-                        val description = articleJson.getString("description")
-                        val url = articleJson.getString("url")
-                        val urlToImage = articleJson.getString("urlToImage")
-                        val publishedAt = articleJson.getString("publishedAt")
-                        val article = Article(
-                            title = title,
-                            description = description,
-                            url = url,
-                            urlToImage = urlToImage,
-                            publishedAt = Date()
-                        )
-                        articlesResult.add(article)
+            try {
+                client.newCall(request).execute().use { response ->
+                    if (!response.isSuccessful) {
+                        viewModelScope.launch(Dispatchers.Main) {
+                            _uiState.value = _uiState.value.copy(
+                                isLoading = false,
+                                error = "error ${response.code}"
+                            )
+                        }
                     }
-                    viewModelScope.launch(Dispatchers.Main) {
-                        _articles.value = articlesResult
+                    val result = response.body!!.string()
+                    val jsonResult = JSONObject(result)
+                    val status = jsonResult.getString("status")
+                    if (status == "ok") {
+                        val articlesJson = jsonResult.getJSONArray("articles")
+                        val articlesResult = arrayListOf<Article>()
+                        for (index in 0..<articlesJson.length()) {
+                            val articleJson = articlesJson.getJSONObject(index)
+                            articlesResult.add(Article.fromJson(articleJson))
+                        }
+                        viewModelScope.launch(Dispatchers.Main) {
+                            _uiState.value = _uiState.value.copy(
+                                articles = articlesResult,
+                                isLoading = false,
+                                error = null
+                            )
+                        }
                     }
                 }
+            }catch (e: Exception){
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    error = "error: ${e.localizedMessage}"
+                )
             }
         }
     }
