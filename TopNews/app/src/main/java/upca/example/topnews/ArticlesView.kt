@@ -13,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,13 +26,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.apps.card.v1.Columns
-import com.google.type.Date
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.json.JSONObject
 import upca.example.topnews.Article
 import upca.example.topnews.ui.theme.TopNewsTheme
 import java.io.IOException
+import java.util.Date
 import kotlin.collections.arrayListOf
 
 @Composable
@@ -39,36 +45,19 @@ fun ArticlesView(
     modifier: Modifier = Modifier
 ){
 
-    var articles by remember { mutableStateOf<List<Article>>(
-        arrayListOf()
-    ) }
+    val viewModel : ArticlesViewModel = viewModel()
+    val articles by viewModel.articles.collectAsState()
 
     ArticlesViewContent(
         modifier = modifier,
         articles = articles
     )
 
-    LaunchedEffect(articles) {
-         val client = OkHttpClient()
-
-        val request = Request.Builder()
-            .url("https://publicobject.com/helloworld.txt")
-            .build()
-
-        client.newCall(request).execute().use { response ->
-            if (!response.isSuccessful) throw IOException("Unexpected code $response")
-
-            for ((name, value) in response.headers) {
-                println("$name: $value")
-            }
-
-            println(response.body!!.string())
-        }
-
+    LaunchedEffect(Unit) {
+        viewModel.fetchArticles()
     }
 
 }
-
 
 @Composable
 fun ArticlesViewContent(
