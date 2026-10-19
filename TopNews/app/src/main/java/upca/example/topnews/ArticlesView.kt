@@ -106,10 +106,9 @@ fun ArticlesViewContent(
                     ArticleViewRow(
                         modifier = Modifier
                             .clickable {
-                                //https://news.google.com/rss/articles/CBMiW0FVX3lxTFB6MTJzVzlOQ3h3T3UweTdNRjRrUlRhcUhhVWlGZ2EwWG84SnRxRkNFQVBaSldicVlKYzY5b25LN0hBOE9LTi1UcU51Z2xwWVVwX2kxTXZnWm1xVEU?oc=5"
                                 navController
                                     .navigate(
-                                        "article_detail/{title}/{url}"
+                                        Screen.ArticleDetail.route
                                             .replace("{title}", article.title?:"")
                                             .replace("{url}", (article.url?:"").encodeURL())
                                     )

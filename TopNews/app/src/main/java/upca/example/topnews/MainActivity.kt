@@ -26,14 +26,14 @@ class MainActivity : ComponentActivity() {
             TopNewsTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     NavHost(navController = navController,
-                        startDestination = "articles",
+                        startDestination = Screen.Articles.route,
                         modifier = Modifier.padding(innerPadding)) {
-                        composable( route = "articles"){
+                        composable( route = Screen.Articles.route){
                             ArticlesView(
                                 navController = navController
                             )
                         }
-                        composable( route = "article_detail/{title}/{url}"){ backStackEntry ->
+                        composable( route = Screen.ArticleDetail.route){ backStackEntry ->
                             val title = backStackEntry.arguments?.getString("title")?:""
                             val url = (backStackEntry.arguments?.getString("url")?:"").decodeURL()
                             ArticleDetailView(
@@ -46,4 +46,9 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+}
+
+sealed class Screen(val route: String) {
+    object Articles : Screen("articles")
+    object ArticleDetail : Screen("article_detail/{title}/{url}")
 }
