@@ -11,6 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import upca.example.topnews.ui.theme.TopNewsTheme
 
 class MainActivity : ComponentActivity() {
@@ -18,11 +21,27 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val navController = rememberNavController()
+
             TopNewsTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    ArticlesView(
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    NavHost(navController = navController,
+                        startDestination = "articles",
+                        modifier = Modifier.padding(innerPadding)) {
+                        composable( route = "articles"){
+                            ArticlesView(
+                                navController = navController
+                            )
+                        }
+                        composable( route = "article_detail/{title}/{url}"){ backStackEntry ->
+                            val title = backStackEntry.arguments?.getString("title")?:""
+                            val url = (backStackEntry.arguments?.getString("url")?:"").decodeURL()
+                            ArticleDetailView(
+                                title = title,
+                                url = url
+                            )
+                        }
+                    }
                 }
             }
         }

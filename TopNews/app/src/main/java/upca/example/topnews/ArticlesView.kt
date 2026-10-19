@@ -3,6 +3,7 @@ package upca.example.topnews
 import android.widget.ProgressBar
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,6 +32,8 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
 import com.google.apps.card.v1.Columns
 import kotlinx.coroutines.Dispatchers
@@ -47,7 +50,8 @@ import kotlin.collections.arrayListOf
 
 @Composable
 fun ArticlesView(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavController = rememberNavController()
 ){
 
     val viewModel : ArticlesViewModel = viewModel()
@@ -55,7 +59,8 @@ fun ArticlesView(
 
     ArticlesViewContent(
         modifier = modifier,
-        uiState = uiState
+        uiState = uiState,
+        navController = navController
     )
 
     LaunchedEffect(Unit) {
@@ -67,7 +72,8 @@ fun ArticlesView(
 @Composable
 fun ArticlesViewContent(
     modifier: Modifier = Modifier,
-    uiState: ArticlesViewState = ArticlesViewState()
+    uiState: ArticlesViewState = ArticlesViewState(),
+    navController: NavController = rememberNavController()
 ){
 
     when {
@@ -96,40 +102,23 @@ fun ArticlesViewContent(
             ) {
                 itemsIndexed(
                     items = uiState.articles
-                ){ index, article ->
-                    Column(
+                ) { index, article ->
+                    ArticleViewRow(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(MaterialTheme.colorScheme.primaryContainer)
-                    ) {
-                        Text(article.title ?: "",
-                            fontSize = TextUnit(24f, TextUnitType.Sp)
-
-                        )
-                        Text(article.description ?: "")
-                        article.urlToImage?.let { url ->
-                            AsyncImage(
-                               model = url,
-                                contentDescription = "image article"
-                            )
-                        }?:run {
-                            Image(
-                                painter = painterResource(R.drawable.ic_launcher_foreground),
-                                contentDescription = "image article"
-                            )
-                        }
-                        Text((article.publishedAt?: java.util.Date()).toString() )
-                    }
-
+                            .clickable {
+                                //https://news.google.com/rss/articles/CBMiW0FVX3lxTFB6MTJzVzlOQ3h3T3UweTdNRjRrUlRhcUhhVWlGZ2EwWG84SnRxRkNFQVBaSldicVlKYzY5b25LN0hBOE9LTi1UcU51Z2xwWVVwX2kxTXZnWm1xVEU?oc=5"
+                                navController
+                                    .navigate(
+                                        "article_detail/{title}/{url}"
+                                            .replace("{title}", article.title?:"")
+                                            .replace("{url}", (article.url?:"").encodeURL())
+                                    )
+                            },
+                        article = article)
                 }
             }
         }
     }
-
-
-
 }
 
 @Preview(showBackground = true)
@@ -165,7 +154,7 @@ fun ArticlesViewPreview() {
                             description = "..."
                         ),
                     ),
-                    isLoading = true,
+                    isLoading = false,
                     error = null
                 )
         )
