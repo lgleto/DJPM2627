@@ -13,26 +13,22 @@ import upca.example.topnews.ui.theme.TopNewsTheme
 @Composable
 fun ArticleDetailView(
     modifier: Modifier = Modifier,
-    title : String = "",
     url : String = "",
 ){
-    Column() {
-        Text(title)
-        AndroidView(
-            factory = { context ->
-                WebView(context).apply {
-                    settings.javaScriptEnabled = true
-                    webViewClient = WebViewClient()
-                    settings.loadWithOverviewMode = true
-                    settings.useWideViewPort = true
-                    settings.setSupportZoom(true)
-                }
-            },
-            update = { webView ->
-                webView.loadUrl(url)
+    AndroidView(
+        factory = { context ->
+            WebView(context).apply {
+                settings.javaScriptEnabled = true
+                webViewClient = WebViewClient()
+                settings.loadWithOverviewMode = true
+                settings.useWideViewPort = true
+                settings.setSupportZoom(true)
             }
-        )
-    }
+        },
+        update = { webView ->
+            webView.loadUrl(url)
+        }
+    )
 }
 
 @Preview(showBackground = true)
@@ -41,7 +37,6 @@ fun ArticleViewPreview() {
     TopNewsTheme() {
         ArticleDetailView(
             modifier = Modifier,
-            title = "Teste de noticia",
         )
     }
 }
