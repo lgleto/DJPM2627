@@ -1,6 +1,5 @@
-package upca.example.topnews
+package upca.example.topnews.ui.home
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,12 +17,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import upca.example.topnews.ui.theme.OnSurfaceVariantLight
+import upca.example.topnews.R
+import upca.example.topnews.models.Article
+import upca.example.topnews.toShortDateTime
 import upca.example.topnews.ui.theme.TopNewsTheme
+import java.util.Date
 
 @Composable
 fun ArticleViewRow(
@@ -65,7 +65,7 @@ fun ArticleViewRow(
                 contentDescription = "image article",
                 contentScale = ContentScale.Crop
             )
-            Text((article.publishedAt ?: java.util.Date()).toShortDateTime(),
+            Text((article.publishedAt ?: Date()).toShortDateTime(),
                 modifier = Modifier
                     .padding(4.dp)
                     .clip(RoundedCornerShape(8.dp))

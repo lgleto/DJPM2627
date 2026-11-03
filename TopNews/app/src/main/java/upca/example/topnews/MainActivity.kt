@@ -7,12 +7,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,10 +17,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import upca.example.topnews.ui.components.MyBottomBar
+import upca.example.topnews.ui.components.MyTopBar
+import upca.example.topnews.ui.home.ArticleDetailView
+import upca.example.topnews.ui.home.ArticlesView
 import upca.example.topnews.ui.theme.TopNewsTheme
 
 class MainActivity : ComponentActivity() {
@@ -46,17 +46,50 @@ class MainActivity : ComponentActivity() {
                             isBaseScreen = isBaseScreen,
                             actions = topBarActions
                         )
+                    },
+                    bottomBar = {
+                        MyBottomBar(
+                            navController = navController
+                        )
                     }
                 ) { innerPadding ->
                     NavHost(navController = navController,
-                        startDestination = Screen.Articles.route,
+                        startDestination = Screen.Home.route,
                         modifier = Modifier.padding(innerPadding)) {
-                        composable( route = Screen.Articles.route){
+                        composable( route = Screen.Home.route){
                             isBaseScreen = true
                             title = "Top News"
                             topBarActions = {}
                             ArticlesView(
-                                navController = navController
+                                navController = navController,
+                                category = ""
+                            )
+                        }
+                        composable( route = Screen.Sports.route){
+                            isBaseScreen = true
+                            title = "Sports"
+                            topBarActions = {}
+                            ArticlesView(
+                                navController = navController,
+                                category = "sports"
+                            )
+                        }
+                        composable( route = Screen.Health.route){
+                            isBaseScreen = true
+                            title = "Health"
+                            topBarActions = {}
+                            ArticlesView(
+                                navController = navController,
+                                category = "health"
+                            )
+                        }
+                        composable( route = Screen.Technology.route){
+                            isBaseScreen = true
+                            title = "Technology"
+                            topBarActions = {}
+                            ArticlesView(
+                                navController = navController,
+                                category = "technology"
                             )
                         }
                         composable( route = Screen.ArticleDetail.route){ backStackEntry ->
@@ -91,6 +124,9 @@ class MainActivity : ComponentActivity() {
 }
 
 sealed class Screen(val route: String) {
-    object Articles : Screen("articles")
+    object Home : Screen("home")
+    object Sports : Screen("sports")
+    object Health : Screen("health")
+    object Technology : Screen("technology")
     object ArticleDetail : Screen("article_detail/{title}/{url}")
 }

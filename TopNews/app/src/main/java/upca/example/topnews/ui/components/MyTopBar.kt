@@ -1,4 +1,4 @@
-package upca.example.topnews
+package upca.example.topnews.ui.components
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -11,7 +11,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.google.apps.card.v1.Icon
+import upca.example.topnews.R
 import upca.example.topnews.ui.theme.TopNewsTheme
 
 @OptIn(ExperimentalMaterial3Api::class)

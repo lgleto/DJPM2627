@@ -1,6 +1,7 @@
-package upca.example.topnews
+package upca.example.topnews.models
 
 import org.json.JSONObject
+import upca.example.topnews.toServerDateTime
 import java.util.Date
 
 class Article (

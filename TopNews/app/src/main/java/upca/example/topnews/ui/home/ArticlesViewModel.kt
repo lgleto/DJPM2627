@@ -1,9 +1,8 @@
-package upca.example.topnews
+package upca.example.topnews.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,7 +10,7 @@ import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
-import java.io.IOException
+import upca.example.topnews.models.Article
 
 data class ArticlesViewState (
     val articles : ArrayList<Article> = arrayListOf(),
@@ -24,7 +23,10 @@ class ArticlesViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(ArticlesViewState())
     val uiState : StateFlow<ArticlesViewState> = _uiState.asStateFlow()
 
-    fun fetchArticles(){
+    fun fetchArticles(category : String ){
+
+        val queryCategory = if (category.isEmpty()) "" else "&category=$category"
+        val urlStr = "https://newsapi.org/v2/top-headlines?country=us$queryCategory&apiKey=1765f87e4ebc40229e80fd0f75b6416c"
         _uiState.value = _uiState.value.copy(
             isLoading = true
         )
@@ -32,7 +34,7 @@ class ArticlesViewModel : ViewModel() {
             val client = OkHttpClient()
 
             val request = Request.Builder()
-                .url("https://newsapi.org/v2/top-headlines?country=us&apiKey=1765f87e4ebc40229e80fd0f75b6416c")
+                .url(urlStr)
                 .build()
 
             try {
