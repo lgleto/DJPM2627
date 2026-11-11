@@ -4,9 +4,11 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import upca.example.myshoppinglist.TAG
+import upca.example.myshoppinglist.models.User
 
 
 data class LoginState(
@@ -42,6 +44,28 @@ class LoginViewModel : ViewModel() {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithEmail:success")
                     val user = auth.currentUser
+                    val userEmail = user?.email
+                    val userName = user?.displayName
+
+                    user?.uid?.let { userId ->
+                        val db = Firebase.firestore
+                        //val userHash = hashMapOf(
+                        //    "name" to userName,
+                        //    "email" to userEmail,
+                        //    "id" to user?.uid
+                        //)
+
+                        val user = User(
+                            name = userName,
+                            email = userEmail,
+                            id = userId
+                        )
+
+                        db.collection("users")
+                            .document(userId)
+                            .set(user)
+                    }
+
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
                         error = null)

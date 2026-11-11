@@ -1,13 +1,13 @@
 package upca.example.myshoppinglist
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Icon
+import androidx.compose.material3.Button
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -18,14 +18,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import upca.example.myshoppinglist.ui.components.MyTopBar
+import upca.example.myshoppinglist.ui.home.kart.AddKartView
+import upca.example.myshoppinglist.ui.home.HomeView
+import upca.example.myshoppinglist.ui.home.kart.AddProductView
+import upca.example.myshoppinglist.ui.home.kart.KartView
 import upca.example.myshoppinglist.ui.login.LoginView
 import upca.example.myshoppinglist.ui.theme.MyShoppingListTheme
 
@@ -49,7 +52,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-
             MyShoppingListTheme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
@@ -70,16 +72,19 @@ class MainActivity : ComponentActivity() {
                             title = "Home"
 
                             topBarActions = {
-                                IconButton(
-                                    onClick = {
+                                Text("Logout",
+                                    modifier = Modifier
+                                        .padding(8.dp)
+                                        .clickable
+                                    {
                                         Firebase.auth.signOut()
                                         navController.navigate(Screen.Login.route)
                                     }
-                                ) {
-                                    Text("Logout")
-                                }
+                                )
                             }
-                            Text(text = "Home")
+                            HomeView(
+                                navController = navController
+                            )
                         }
                         composable(route = Screen.Login.route) {
                             isBaseScreen = true
@@ -87,6 +92,36 @@ class MainActivity : ComponentActivity() {
                             topBarActions = {}
                             LoginView(
                                 navController = navController
+                            )
+                        }
+                        composable(route = Screen.AddKart.route) {
+                            isBaseScreen = false
+                            title = "Add Kart"
+                            topBarActions = {}
+                            AddKartView(
+                                navController = navController
+                            )
+                        }
+                        composable(route = Screen.Kart.route) { backStateEntry ->
+                            val kartId = backStateEntry.arguments?.getString("kartId")!!
+                            isBaseScreen = false
+                            title = "Kart"
+                            topBarActions = {}
+                            KartView(
+                                navController = navController,
+                                kartId = kartId
+                            )
+                        }
+                        composable(route = Screen.AddProduct.route) { backStateEntry ->
+                            val kartId = backStateEntry.arguments?.getString("kartId")!!
+                            val productId = backStateEntry.arguments?.getString("productId")
+                            isBaseScreen = false
+                            title = "Product"
+                            topBarActions = {}
+                            AddProductView(
+                                navController = navController,
+                                kartId = kartId,
+                                productId = productId
                             )
                         }
                     }
@@ -99,4 +134,7 @@ class MainActivity : ComponentActivity() {
 sealed class Screen(val route: String) {
     object Home : Screen("home")
     object Login : Screen("login")
+    object AddKart : Screen ("add_kart")
+    object Kart : Screen ("kart/{kartId}")
+    object AddProduct : Screen ("add_product/{kartId}/{productId}")
 }
