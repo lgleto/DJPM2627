@@ -1,10 +1,10 @@
 # Sumários — Desenvolvimento de Jogos para Plataformas Móveis
 
-Ano letivo 2026/2027. Período de 14 de setembro a 2 de novembro de 2026.
+Ano letivo 2026/2027. Período de 14 de setembro a 11 de novembro de 2026.
 
 ## Horário
 **segunda-feira**: 14h-17h
-**quarta-feira**: 10h-17h
+**quarta-feira**: 10h-13h
 
 O dia 5 de outubro é feriado nacional (Implantação da República).
 
@@ -96,6 +96,24 @@ O dia 5 de outubro é feriado nacional (Implantação da República).
 
 ## 02/11/2026 — segunda-feira
 
-**Título:** Sem código novo
+**Título:** Autenticação e sessão do utilizador
 
-**Descrição:** Sem matéria nova. Não há código escrito depois da aula de 28 de outubro.
+**Descrição:** Formulário com campos de texto e estado num `StateFlow`. Autenticação por email e palavra-passe com Firebase Authentication. Verificação da sessão já existente e terminar sessão. Navegação entre o ecrã de autenticação e o ecrã seguinte.
+
+## 04/11/2026 — quarta-feira
+
+**Título:** Execução do exemplo anterior
+
+**Descrição:** Execução, pelos alunos, do exemplo da aula anterior: formulários, autenticação e sessão do utilizador.
+
+## 09/11/2026 — segunda-feira
+
+**Título:** Consultas e listeners no Firestore
+
+**Descrição:** Escrita do documento do utilizador autenticado no Cloud Firestore. Consulta de uma coleção filtrada e escuta de alterações com snapshot listener. Apresentação dos documentos recebidos numa lista e criação de um documento novo.
+
+## 11/11/2026 — quarta-feira
+
+**Título:** Subcoleções e atualização de documentos
+
+**Descrição:** Modelos de dados para o Firestore, com o identificador do documento excluído da serialização. Subcoleções: criar, ler e atualizar documentos. Navegação com o identificador do documento passado como argumento da rota.

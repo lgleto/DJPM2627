@@ -2,7 +2,7 @@
 
 Exemplos das aulas de 2026/2027. Todos os projetos estão escritos em Kotlin e usam os padrões da linguagem trabalhados nas aulas. Cada pasta é um projeto Android que se abre à parte no Android Studio.
 
-Horário: segunda-feira, 14h–17h, e quarta-feira, 10h–17h. Os sumários estão em [SUMARIOS.md](SUMARIOS.md).
+Horário: segunda-feira, 14h–17h, e quarta-feira, 10h–13h. Os sumários estão em [SUMARIOS.md](SUMARIOS.md).
 
 ## Padrões de Kotlin
 
@@ -22,7 +22,7 @@ O código segue os padrões de Kotlin usados nas aulas, em vez de equivalentes d
 | [helloworld](helloworld) | `Scaffold`, estado e evento de clique | 21/09 e 23/09 |
 | [Calculator](Calculator) | Grelha, botão reutilizável e `CalculatorBrain` | 28/09, 30/09 e 07/10 |
 | [TopNews](TopNews) | Lista, HTTP, `ViewModel`, imagens, `WebView`, tema e barras | 12/10 a 28/10 |
-| [MyShoppingList](MyShoppingList) | Ecrã de autenticação com Firebase | 02/11 |
+| [MyShoppingList](MyShoppingList) | Autenticação com Firebase e Cloud Firestore | 02/11, 04/11, 09/11 e 11/11 |
 
 ## helloworld
 
@@ -50,7 +50,15 @@ Aplicação de notícias que junta as aulas de listas, rede, navegação e tema.
 
 ## MyShoppingList
 
-Ecrã de início de sessão. `LoginView` lê o email e a palavra-passe. `LoginViewModel` guarda esse estado num `StateFlow`, valida os campos e autentica com Firebase Authentication.
+Lista partilhada com sessão de utilizador e dados no Cloud Firestore.
+
+- `LoginView` lê o email e a palavra-passe. `LoginViewModel` guarda esse estado num `StateFlow` e autentica com Firebase Authentication.
+- A sessão existente entra direto no ecrã principal. Terminar sessão volta ao ecrã de autenticação.
+- Depois da autenticação, o utilizador é gravado na coleção `users`.
+- `HomeViewModel` escuta a coleção `karts` filtrada pelo utilizador atual, com um snapshot listener.
+- `AddKartView` cria um documento nessa coleção.
+- `KartViewModel` escuta um documento e a subcoleção `products`, e atualiza o campo `checked`.
+- `AddProductView` cria ou substitui um produto nessa subcoleção. O identificador do documento vai na rota.
 
 ## Licença
 
