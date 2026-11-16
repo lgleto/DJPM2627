@@ -102,9 +102,9 @@ O dia 5 de outubro é feriado nacional (Implantação da República).
 
 ## 04/11/2026 — quarta-feira
 
-**Título:** Execução do exemplo anterior
+**Título:** Não hove aula.
 
-**Descrição:** Execução, pelos alunos, do exemplo da aula anterior: formulários, autenticação e sessão do utilizador.
+**Descrição:** Não hove aula.
 
 ## 09/11/2026 — segunda-feira
 
