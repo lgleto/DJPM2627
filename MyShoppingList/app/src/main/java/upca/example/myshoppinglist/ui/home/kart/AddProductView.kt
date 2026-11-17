@@ -76,7 +76,7 @@ fun AddProductView(
             },
             enabled = !uiState.isLoading
         ) {
-            Text(if(isEdit) "Add Product" else "Edit Product")
+            Text(if(isEdit) "Edit Product" else "Add Product")
             if (uiState.isLoading){
                 CircularProgressIndicator(
                     modifier = Modifier.padding(8.dp),

@@ -121,7 +121,7 @@ class MainActivity : ComponentActivity() {
                             AddProductView(
                                 navController = navController,
                                 kartId = kartId,
-                                productId = productId
+                                productId = if (productId == "null") null else productId
                             )
                         }
                     }

@@ -81,6 +81,7 @@ fun KartView(
                 navController.navigate(
                     Screen.AddProduct.route
                         .replace("{kartId}", kartId)
+                        .replace("{productId}", "null")
                 )
             }) {
             Text("Add Product")
